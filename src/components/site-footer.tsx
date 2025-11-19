@@ -1,7 +1,6 @@
 "use client";
 
 import { Phone, Mail, MapPin } from "lucide-react";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 
 const SiteFooter = () => {
   return (
@@ -41,7 +40,6 @@ const SiteFooter = () => {
         <div className="mt-8 text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} Exportieren Haus. All rights reserved.
         </div>
-        <MadeWithDyad />
       </div>
     </footer>
   );
