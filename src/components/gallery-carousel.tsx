@@ -10,10 +10,26 @@ import {
 } from "@/components/ui/carousel";
 
 const slides = [
-  { title: "Performance Coupe", caption: "Precision export for high-performance vehicles." },
-  { title: "Luxury SUV", caption: "Premium handling for luxury fleets and custom specs." },
-  { title: "Classic Roadster", caption: "Expertise in heritage and collectible automobiles." },
-  { title: "Executive Sedan", caption: "Corporate-ready logistics for executive transport." },
+  {
+    title: "Mercedes-Benz",
+    caption: "S‑Class, G‑Class, AMG — exported with white‑glove handling.",
+    image: "https://source.unsplash.com/1200x800/?mercedes,luxury-car"
+  },
+  {
+    title: "BMW",
+    caption: "M‑Series and premium models — precision logistics worldwide.",
+    image: "https://source.unsplash.com/1200x800/?bmw,luxury-car"
+  },
+  {
+    title: "Range Rover",
+    caption: "SUV excellence — bespoke transport for premium fleets.",
+    image: "https://source.unsplash.com/1200x800/?range-rover,luxury-suv"
+  },
+  {
+    title: "Toyota",
+    caption: "Reliable and versatile — from Land Cruisers to hybrids.",
+    image: "https://source.unsplash.com/1200x800/?toyota,vehicle"
+  },
 ];
 
 const GalleryCarousel = () => {
@@ -34,9 +50,10 @@ const GalleryCarousel = () => {
                 <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
                   <div className="relative">
                     <img
-                      src="/placeholder.svg"
+                      src={s.image}
                       alt={s.title}
-                      className="h-[320px] w-full object-cover"
+                      loading="lazy"
+                      className="h-[360px] w-full object-cover md:h-[420px]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
