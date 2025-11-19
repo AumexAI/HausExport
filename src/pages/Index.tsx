@@ -1,17 +1,34 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+"use client";
 
-import { MadeWithDyad } from "@/components/made-with-dyad";
+import BrandNavbar from "@/components/brand-navbar";
+import Hero from "@/components/hero";
+import Services from "@/components/services";
+import GalleryCarousel from "@/components/gallery-carousel";
+import Process from "@/components/process";
+import ContactForm from "@/components/contact-form";
+import SiteFooter from "@/components/site-footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">
-          Start building your amazing project here!
-        </p>
-      </div>
-      <MadeWithDyad />
+    <div className="min-h-screen bg-background">
+      <BrandNavbar />
+      <main className="pt-16">
+        <Hero />
+        <GalleryCarousel />
+        <Services />
+        <Process />
+        <section id="about" className="container mx-auto px-4 py-16">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-semibold tracking-tight">About Exportieren Haus</h2>
+            <p className="mt-3 text-muted-foreground">
+              We specialize in the export of vehicles and high-value goods, combining discreet
+              service, meticulous documentation, and trusted global partnerships.
+            </p>
+          </div>
+        </section>
+        <ContactForm />
+      </main>
+      <SiteFooter />
     </div>
   );
 };
