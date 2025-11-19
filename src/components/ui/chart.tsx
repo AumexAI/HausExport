@@ -42,7 +42,9 @@ const ChartContainer = React.forwardRef<
   }
 >(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId();
-  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
+  const baseId = id || uniqueId.replace(/:/g, "");
+  const safeBaseId = String(baseId).replace(/[^a-zA-Z0-9_-]/g, "");
+  const chartId = `chart-${safeBaseId || "auto"}`;
 
   return (
     <ChartContext.Provider value={{ config }}>
@@ -65,35 +67,69 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
+// Added: strict sanitizers to prevent CSS injection.
+function sanitizeColor(input: unknown): string | null {
+  if (typeof input !== "string") return null;
+  const value = input.trim();
+  if (value.length === 0 || value.length > 64) return null;
+
+  const hex = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+  const rgb = /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/;
+  const rgba = /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(?:0|1|0?\.\d+)\s*\)$/;
+
+  if (hex.test(value) || rgb.test(value) || rgba.test(value)) {
+    return value;
+  }
+  return null;
+}
+
+function sanitizeVarToken(input: string): string {
+  // Allow only safe characters for CSS variable names and attribute selectors.
+  const safe = input.replace(/[^a-zA-Z0-9_-]/g, "");
+  return safe;
+}
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    ([_, config]) => config.theme || config.color,
+    ([_, item]) => item.theme || item.color,
   );
 
   if (!colorConfig.length) {
     return null;
   }
 
+  const safeId = sanitizeVarToken(id);
+
+  const css = Object.entries(THEMES)
+    .map(([theme, prefix]) => {
+      const lines = colorConfig
+        .map(([key, itemConfig]) => {
+          const rawColor =
+            itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
+            itemConfig.color;
+          const safeColor = sanitizeColor(rawColor);
+          const varName = sanitizeVarToken(key);
+
+          if (!safeColor || !varName) return null;
+          return `  --color-${varName}: ${safeColor};`;
+        })
+        .filter(Boolean)
+        .join("\n");
+
+      if (!lines) return "";
+      return `${prefix} [data-chart=${safeId}] {\n${lines}\n}\n`;
+    })
+    .filter(Boolean)
+    .join("\n");
+
+  if (!css) {
+    return null;
+  }
+
   return (
     <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-      itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
-  })
-  .join("\n")}
-}
-`,
-          )
-          .join("\n"),
-      }}
+      // Safe: values are strictly sanitized to approved color formats and IDs/tokens are cleaned.
+      dangerouslySetInnerHTML={{ __html: css }}
     />
   );
 };
