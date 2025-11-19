@@ -21,7 +21,7 @@ const SiteFooter = () => {
                 <Phone className="h-4 w-4" /> +1 (555) 012-3456
               </li>
               <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4" /> contact@exportieren.haus
+                <Mail className="h-4 w-4" /> Exportieren Haus@gmail.com
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" /> Global Operations
