@@ -99,3 +99,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Ship sail animation */
+@keyframes ship-sail {
+  from { left: -15%; }
+  to { left: 115%; }
+}
+
+.animate-ship-sail {
+  animation: ship-sail var(--sail-duration, 2000ms) ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ship-sail {
+    animation-duration: 1ms;
+  }
+}
