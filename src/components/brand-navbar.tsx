@@ -21,7 +21,7 @@ const BrandNavbar = () => {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <a href="/" className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-md bg-primary/10 ring-1 ring-primary/20" />
-          <span className="text-lg font-semibold tracking-tight">Exportieren Haus</span>
+          <span className="text-lg font-semibold tracking-tight">Haus Export</span>
         </a>
 
         <nav className="hidden md:flex items-center gap-8">
