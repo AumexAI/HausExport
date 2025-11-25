@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/carousel";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 type Photo = {
   url: string;
@@ -34,12 +36,15 @@ const SupabaseGallery: React.FC<Props> = ({
   const { toast } = useToast();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
 
     const loadPhotos = async () => {
       setLoading(true);
+      setErrorMsg(null);
 
       const { data, error } = await supabase.storage
         .from(bucketName)
@@ -49,9 +54,11 @@ const SupabaseGallery: React.FC<Props> = ({
         });
 
       if (error) {
+        console.error("Supabase Storage list error:", error);
+        setErrorMsg(error.message || "Failed to fetch from Supabase Storage.");
         toast({
           title: "Failed to load photos",
-          description: error.message,
+          description: error.message || "Check your bucket name/path and access settings.",
           variant: "destructive",
         });
         setLoading(false);
@@ -85,7 +92,7 @@ const SupabaseGallery: React.FC<Props> = ({
     return () => {
       isMounted = false;
     };
-  }, [bucketName, path, toast]);
+  }, [bucketName, path, toast, refreshKey]);
 
   return (
     <section id="gallery" className="container mx-auto px-4 py-16">
@@ -98,9 +105,27 @@ const SupabaseGallery: React.FC<Props> = ({
         <div className="mx-auto mt-10 max-w-4xl">
           <div className="h-[360px] w-full animate-pulse rounded-lg border bg-muted md:h-[420px]" />
         </div>
+      ) : errorMsg ? (
+        <div className="mx-auto mt-10 max-w-3xl">
+          <Alert variant="destructive">
+            <AlertTitle>Couldn't load photos</AlertTitle>
+            <AlertDescription>
+              {errorMsg}. Please verify:
+              <br />
+              • Bucket name: <span className="font-medium">{bucketName}</span>
+              <br />
+              • Path: <span className="font-medium">{path || "(root)"}</span>
+              <br />
+              • Bucket access: make sure files are publicly readable or use signed URLs.
+            </AlertDescription>
+          </Alert>
+          <div className="mt-4 flex gap-2">
+            <Button onClick={() => setRefreshKey((k) => k + 1)}>Retry</Button>
+          </div>
+        </div>
       ) : photos.length === 0 ? (
         <div className="mx-auto mt-10 max-w-4xl text-center text-muted-foreground">
-          No JPG files found in bucket “{bucketName}”.
+          No JPG files found in bucket "{bucketName}" {path ? `at "${path}"` : ""}.
         </div>
       ) : (
         <div className="relative mx-auto mt-10 max-w-4xl">
