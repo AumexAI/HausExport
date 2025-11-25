@@ -27,7 +27,16 @@ const Index = () => {
             </p>
           </div>
         </section>
-        <SupabaseGallery title="Vehicles" description="Pulled from Supabase Storage (PNG files)." />
+        <SupabaseGallery 
+          title="Vehicles" 
+          description="Pulled from Supabase Storage — BMW has two photos."
+          onlyNames={[
+            "BMW LineUP 2.png",
+            "BMW LineUP.png",
+            "Mercedes-Benz LineUP.png",
+            "Range Rover LineUP.png",
+          ]}
+        />
         <ContactForm />
       </main>
       <SiteFooter />
