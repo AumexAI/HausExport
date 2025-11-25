@@ -3,10 +3,10 @@
 import BrandNavbar from "@/components/brand-navbar";
 import Hero from "@/components/hero";
 import Services from "@/components/services";
-import GalleryCarousel from "@/components/gallery-carousel";
 import Process from "@/components/process";
 import ContactForm from "@/components/contact-form";
 import SiteFooter from "@/components/site-footer";
+import SupabaseGallery from "@/components/supabase-gallery";
 
 const Index = () => {
   return (
@@ -14,7 +14,19 @@ const Index = () => {
       <BrandNavbar />
       <main className="pt-16">
         <Hero />
-        <GalleryCarousel />
+
+        <SupabaseGallery
+          title="Vehicles"
+          description="BMW has two photos; all images are served from Supabase Storage."
+          bucket="HausExport"
+          onlyNames={[
+            "BMW LineUP 2.png",
+            "BMW LineUP.png",
+            "Mercedes-Benz LineUP.png",
+            "Range Rover LineUP.png",
+          ]}
+        />
+
         <Services />
         <Process />
         <section id="about" className="container mx-auto px-4 py-16">
