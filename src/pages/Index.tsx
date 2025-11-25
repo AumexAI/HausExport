@@ -7,6 +7,7 @@ import GalleryCarousel from "@/components/gallery-carousel";
 import Process from "@/components/process";
 import ContactForm from "@/components/contact-form";
 import SiteFooter from "@/components/site-footer";
+import SupabaseGallery from "../components/supabase-gallery";
 
 const Index = () => {
   return (
@@ -26,6 +27,7 @@ const Index = () => {
             </p>
           </div>
         </section>
+        <SupabaseGallery title="Vehicles" description="Pulled from Supabase Storage (JPG files)." />
         <ContactForm />
       </main>
       <SiteFooter />
