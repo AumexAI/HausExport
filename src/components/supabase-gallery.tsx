@@ -25,6 +25,7 @@ type Props = {
   path?: string;
   title?: string;
   description?: string;
+  onlyNames?: string[]; // NEW: restrict to specific filenames
 };
 
 const SupabaseGallery: React.FC<Props> = ({
@@ -32,6 +33,12 @@ const SupabaseGallery: React.FC<Props> = ({
   path = "",
   title = "Photos",
   description = "Loaded directly from Supabase Storage.",
+  onlyNames = [
+    "BMW LineUP 2.png",
+    "BMW LineUP.png",
+    "Mercedes-Benz LineUP.png",
+    "Range Rover LineUP.png",
+  ], // NEW: default to the exact set you provided
 }) => {
   const { toast } = useToast();
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -65,16 +72,26 @@ const SupabaseGallery: React.FC<Props> = ({
         return;
       }
 
-      const files = (data || []).filter((f) =>
-        f.name.toLowerCase().match(/\.(png)$/)
-      );
+      // Filter only PNGs, and if onlyNames provided, only include those
+      const nameSet = new Set(onlyNames?.length ? onlyNames : []);
+      const files = (data || []).filter((f) => {
+        const isPng = f.name.toLowerCase().match(/\.(png)$/);
+        const inWhitelist = nameSet.size ? nameSet.has(f.name) : true;
+        return isPng && inWhitelist;
+      });
 
-      const items: Photo[] = files.map((f) => {
+      let items: Photo[] = files.map((f) => {
         const { data: pub } = supabase.storage
           .from(bucketName)
           .getPublicUrl(path ? `${path}/${f.name}` : f.name);
         return { url: pub.publicUrl, name: f.name };
       });
+
+      // Preserve the order from onlyNames if provided
+      if (nameSet.size) {
+        const orderMap = new Map(onlyNames.map((n, i) => [n, i]));
+        items = items.sort((a, b) => (orderMap.get(a.name) ?? 999) - (orderMap.get(b.name) ?? 999));
+      }
 
       if (!isMounted) return;
 
@@ -92,7 +109,7 @@ const SupabaseGallery: React.FC<Props> = ({
     return () => {
       isMounted = false;
     };
-  }, [bucketName, path, toast, refreshKey]);
+  }, [bucketName, path, toast, refreshKey, onlyNames]);
 
   return (
     <section id="gallery" className="container mx-auto px-4 py-16">
@@ -126,6 +143,11 @@ const SupabaseGallery: React.FC<Props> = ({
       ) : photos.length === 0 ? (
         <div className="mx-auto mt-10 max-w-4xl text-center text-muted-foreground">
           No PNG files found in bucket "{bucketName}" {path ? `at "${path}"` : ""}.
+          {onlyNames?.length ? (
+            <div className="mt-2 text-xs">
+              Expected: {onlyNames.join(", ")}
+            </div>
+          ) : null}
         </div>
       ) : (
         <div className="relative mx-auto mt-10 max-w-4xl">
