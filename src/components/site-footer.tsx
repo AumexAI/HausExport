@@ -8,7 +8,7 @@ const SiteFooter = () => {
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div>
-            <h3 className="text-lg font-semibold">Haus Export</h3>
+            <h3 className="text-lg font-semibold">Exportieren Haus</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               Premium exports executed with precision and discretion.
             </p>
@@ -38,7 +38,7 @@ const SiteFooter = () => {
           </div>
         </div>
         <div className="mt-8 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Haus Export. All rights reserved.
+          © {new Date().getFullYear()} Exportieren Haus. All rights reserved.
         </div>
       </div>
     </footer>

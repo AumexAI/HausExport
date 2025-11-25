@@ -27,8 +27,8 @@ const slides = [
   },
   {
     title: "Toyota",
-    caption: "Land Cruiser & 4Runner — rugged capability, trusted worldwide.",
-    image: "/2025-toyota-4runner-vs-toyota-land-cruiser.jpg"
+    caption: "Reliable and versatile — from Land Cruisers to hybrids.",
+    image: "https://source.unsplash.com/1200x800/?toyota,vehicle"
   },
 ];
 
@@ -53,7 +53,6 @@ const GalleryCarousel = () => {
                       src={s.image}
                       alt={s.title}
                       loading="lazy"
-                      referrerPolicy="no-referrer"
                       className="h-[360px] w-full object-cover md:h-[420px]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />

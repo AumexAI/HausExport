@@ -3,13 +3,16 @@ import * as RechartsPrimitive from "recharts";
 
 import { cn } from "@/lib/utils";
 
+// Format: { THEME_NAME: CSS_SELECTOR }
+const THEMES = { light: "", dark: ".dark" } as const;
+
 export type ChartConfig = {
   [k in string]: {
     label?: React.ReactNode;
     icon?: React.ComponentType;
   } & (
     | { color?: string; theme?: never }
-    | { color?: never; theme: Record<"light" | "dark", string> }
+    | { color?: never; theme: Record<keyof typeof THEMES, string> }
   );
 };
 
@@ -37,42 +40,11 @@ const ChartContainer = React.forwardRef<
       typeof RechartsPrimitive.ResponsiveContainer
     >["children"];
   }
->(({ id, className, children, config, style, ...props }, ref) => {
+>(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId();
   const baseId = id || uniqueId.replace(/:/g, "");
   const safeBaseId = String(baseId).replace(/[^a-zA-Z0-9_-]/g, "");
   const chartId = `chart-${safeBaseId || "auto"}`;
-
-  const [isDark, setIsDark] = React.useState<boolean>(() => {
-    if (typeof document === "undefined") return false;
-    return document.documentElement.classList.contains("dark");
-  });
-
-  React.useEffect(() => {
-    if (typeof document === "undefined") return;
-    const root = document.documentElement;
-    const observer = new MutationObserver(() => {
-      setIsDark(root.classList.contains("dark"));
-    });
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-
-  const styleVars = React.useMemo(() => {
-    const vars: React.CSSProperties = {};
-    Object.entries(config).forEach(([key, item]) => {
-      const rawColor =
-        "theme" in item && item.theme
-          ? item.theme[isDark ? "dark" : "light"]
-          : item.color;
-      const safeColor = sanitizeColor(rawColor);
-      const varName = sanitizeVarToken(key);
-      if (safeColor && varName) {
-        (vars as any)[`--color-${varName}`] = safeColor;
-      }
-    });
-    return vars;
-  }, [config, isDark]);
 
   return (
     <ChartContext.Provider value={{ config }}>
@@ -83,9 +55,9 @@ const ChartContainer = React.forwardRef<
           "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
           className,
         )}
-        style={{ ...(style || {}), ...styleVars }}
         {...props}
       >
+        <ChartStyle id={chartId} config={config} />
         <RechartsPrimitive.ResponsiveContainer>
           {children}
         </RechartsPrimitive.ResponsiveContainer>
@@ -95,16 +67,15 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
-// Strict sanitizers to prevent CSS injection.
+// Added: strict sanitizers to prevent CSS injection.
 function sanitizeColor(input: unknown): string | null {
   if (typeof input !== "string") return null;
   const value = input.trim();
   if (value.length === 0 || value.length > 64) return null;
 
   const hex = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
-  const rgb = /^rgb\(\s*(?:[0-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\s*,\s*(?:[0-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\s*,\s*(?:[0-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\s*\)$/;
-  const rgba =
-    /^rgba\(\s*(?:[0-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\s*,\s*(?:[0-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\s*,\s*(?:[0-9]|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\s*,\s*(?:0|1|0?\.\d+)\s*\)$/;
+  const rgb = /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/;
+  const rgba = /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(?:0|1|0?\.\d+)\s*\)$/;
 
   if (hex.test(value) || rgb.test(value) || rgba.test(value)) {
     return value;
@@ -113,9 +84,55 @@ function sanitizeColor(input: unknown): string | null {
 }
 
 function sanitizeVarToken(input: string): string {
+  // Allow only safe characters for CSS variable names and attribute selectors.
   const safe = input.replace(/[^a-zA-Z0-9_-]/g, "");
   return safe;
 }
+
+const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+  const colorConfig = Object.entries(config).filter(
+    ([_, item]) => item.theme || item.color,
+  );
+
+  if (!colorConfig.length) {
+    return null;
+  }
+
+  const safeId = sanitizeVarToken(id);
+
+  const css = Object.entries(THEMES)
+    .map(([theme, prefix]) => {
+      const lines = colorConfig
+        .map(([key, itemConfig]) => {
+          const rawColor =
+            itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
+            itemConfig.color;
+          const safeColor = sanitizeColor(rawColor);
+          const varName = sanitizeVarToken(key);
+
+          if (!safeColor || !varName) return null;
+          return `  --color-${varName}: ${safeColor};`;
+        })
+        .filter(Boolean)
+        .join("\n");
+
+      if (!lines) return "";
+      return `${prefix} [data-chart=${safeId}] {\n${lines}\n}\n`;
+    })
+    .filter(Boolean)
+    .join("\n");
+
+  if (!css) {
+    return null;
+  }
+
+  return (
+    <style
+      // Safe: values are strictly sanitized to approved color formats and IDs/tokens are cleaned.
+      dangerouslySetInnerHTML={{ __html: css }}
+    />
+  );
+};
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
@@ -345,21 +362,26 @@ function getPayloadConfigFromPayload(
 
   const payloadPayload =
     "payload" in payload &&
-    typeof (payload as any).payload === "object" &&
-    (payload as any).payload !== null
-      ? (payload as any).payload
+    typeof payload.payload === "object" &&
+    payload.payload !== null
+      ? payload.payload
       : undefined;
 
   let configLabelKey: string = key;
 
-  if (key in (payload as any) && typeof (payload as any)[key] === "string") {
-    configLabelKey = (payload as any)[key] as string;
+  if (
+    key in payload &&
+    typeof payload[key as keyof typeof payload] === "string"
+  ) {
+    configLabelKey = payload[key as keyof typeof payload] as string;
   } else if (
     payloadPayload &&
     key in payloadPayload &&
     typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
   ) {
-    configLabelKey = payloadPayload[key as keyof typeof payloadPayload] as string;
+    configLabelKey = payloadPayload[
+      key as keyof typeof payloadPayload
+    ] as string;
   }
 
   return configLabelKey in config
@@ -373,4 +395,5 @@ export {
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
+  ChartStyle,
 };

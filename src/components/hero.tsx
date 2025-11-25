@@ -20,7 +20,7 @@ const Hero = () => {
             Global Vehicle & Goods Export Specialists
           </div>
           <h1 className="text-4xl font-semibold tracking-tight text-white md:text-6xl">
-            Haus Export
+            Exportieren Haus
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">
             We orchestrate the seamless export of premium vehicles and goods worldwide,

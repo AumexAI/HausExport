@@ -81,12 +81,8 @@ const SidebarProvider = React.forwardRef<
           _setOpen(openState);
         }
 
-        // Store non-sensitive UI state in localStorage instead of cookies.
-        try {
-          localStorage.setItem(SIDEBAR_COOKIE_NAME, openState ? "expanded" : "collapsed");
-        } catch {
-          // Ignore storage errors (e.g., privacy mode).
-        }
+        // This sets the cookie to keep the sidebar state.
+        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
       },
       [setOpenProp, open],
     );
@@ -113,26 +109,6 @@ const SidebarProvider = React.forwardRef<
       window.addEventListener("keydown", handleKeyDown);
       return () => window.removeEventListener("keydown", handleKeyDown);
     }, [toggleSidebar]);
-
-    // Read saved state from localStorage on mount (only when uncontrolled).
-    React.useEffect(() => {
-      try {
-        const saved = localStorage.getItem(SIDEBAR_COOKIE_NAME);
-        if (saved !== null && typeof openProp === "undefined") {
-          const normalized =
-            saved === "expanded" ? true :
-            saved === "collapsed" ? false :
-            saved === "true" ? true :
-            saved === "false" ? false : undefined;
-
-          if (typeof normalized === "boolean") {
-            _setOpen(normalized);
-          }
-        }
-      } catch {
-        // Ignore storage errors
-      }
-    }, [openProp]);
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
