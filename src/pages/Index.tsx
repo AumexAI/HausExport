@@ -28,6 +28,7 @@ const Index = () => {
           </div>
         </section>
         <SupabaseGallery 
+          bucketName="HausExport"
           title="Vehicles" 
           description="Pulled from Supabase Storage — BMW has two photos."
           onlyNames={[
