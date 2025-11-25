@@ -27,7 +27,7 @@ const Index = () => {
             </p>
           </div>
         </section>
-        <SupabaseGallery title="Vehicles" description="Pulled from Supabase Storage (JPG files)." />
+        <SupabaseGallery title="Vehicles" description="Pulled from Supabase Storage (PNG files)." />
         <ContactForm />
       </main>
       <SiteFooter />

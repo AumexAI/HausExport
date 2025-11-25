@@ -66,7 +66,7 @@ const SupabaseGallery: React.FC<Props> = ({
       }
 
       const files = (data || []).filter((f) =>
-        f.name.toLowerCase().match(/\.(jpg|jpeg)$/)
+        f.name.toLowerCase().match(/\.(png)$/)
       );
 
       const items: Photo[] = files.map((f) => {
@@ -125,7 +125,7 @@ const SupabaseGallery: React.FC<Props> = ({
         </div>
       ) : photos.length === 0 ? (
         <div className="mx-auto mt-10 max-w-4xl text-center text-muted-foreground">
-          No JPG files found in bucket "{bucketName}" {path ? `at "${path}"` : ""}.
+          No PNG files found in bucket "{bucketName}" {path ? `at "${path}"` : ""}.
         </div>
       ) : (
         <div className="relative mx-auto mt-10 max-w-4xl">
@@ -145,7 +145,7 @@ const SupabaseGallery: React.FC<Props> = ({
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
                       <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                         <h3 className="text-xl font-semibold">
-                          {p.name.replace(/\.(jpg|jpeg)$/i, "")}
+                          {p.name.replace(/\.(png)$/i, "")}
                         </h3>
                         <p className="text-sm opacity-80">Supabase Storage</p>
                       </div>
