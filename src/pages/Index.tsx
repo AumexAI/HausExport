@@ -20,7 +20,6 @@ const Index = () => {
           description="All images are served from Supabase Storage."
           bucket="HausExport"
           onlyNames={[
-            "BMW LineUP 2.png",
             "Mercedes-Benz LineUP.png",
             "Range Rover LineUP.png",
           ]}
