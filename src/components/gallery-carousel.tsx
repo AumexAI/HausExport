@@ -27,8 +27,8 @@ const slides = [
   },
   {
     title: "Toyota",
-    caption: "Reliable and versatile — from Land Cruisers to hybrids.",
-    image: "https://source.unsplash.com/1200x800/?toyota,vehicle"
+    caption: "Land Cruiser & 4Runner — rugged capability, trusted worldwide.",
+    image: "/2025-toyota-4runner-vs-toyota-land-cruiser.jpg"
   },
 ];
 
