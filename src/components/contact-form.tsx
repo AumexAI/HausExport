@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const schema = z.object({
   name: z.string().min(2, "Please enter your full name"),
@@ -30,9 +31,23 @@ const ContactForm = () => {
     },
   });
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
+    const { data, error } = await supabase.functions.invoke("send-contact-email", {
+      body: {
+        ...values,
+        to: "info@hausexport.com",
+      },
+    });
+
+    if (error) {
+      toast.error("Email failed to send", {
+        description: error.message ?? "Please try again.",
+      });
+      return;
+    }
+
     toast.success("Thank you! We'll be in touch shortly.", {
-      description: "Your request has been received.",
+      description: "Your request has been received and emailed to our team.",
     });
     form.reset();
   };
