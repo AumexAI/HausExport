@@ -30,7 +30,7 @@ const Index = () => {
         <Process />
         <section id="about" className="container mx-auto px-4 py-16">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-semibold tracking-tight">About Exportieren Haus</h2>
+            <h2 className="text-3xl font-semibold tracking-tight">About Haus Export</h2>
             <p className="mt-3 text-muted-foreground">
               We specialize in the export of vehicles and high-value goods, combining discreet
               service, meticulous documentation, and trusted global partnerships.
