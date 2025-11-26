@@ -35,7 +35,7 @@ const ContactForm = () => {
     const { data, error } = await supabase.functions.invoke("send-contact-email", {
       body: {
         ...values,
-        to: "info@hausexport.com",
+        to: "hausexport@gmail.com",
       },
     });
 

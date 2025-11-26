@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
     to,
   } = payload;
 
-  const recipient = to || "info@hausexport.com";
+  const recipient = to || "hausexport@gmail.com";
   const subject = `New Contact Request from ${name}`;
   const html = `
     <div style="font-family: sans-serif;">
