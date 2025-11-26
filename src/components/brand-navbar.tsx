@@ -33,9 +33,6 @@ const BrandNavbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" asChild>
-            <a href="#vehicles">Explore Vehicles</a>
-          </Button>
           <Button asChild>
             <a href="#contact">Get a Quote</a>
           </Button>
