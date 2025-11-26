@@ -1,6 +1,6 @@
 "use client";
 
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, Instagram, Ghost } from "lucide-react";
 
 const SiteFooter = () => {
   return (
@@ -24,6 +24,30 @@ const SiteFooter = () => {
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" /> Global Operations
+              </li>
+              <li className="flex items-center gap-2">
+                <Instagram className="h-4 w-4" />
+                <a
+                  href="https://www.instagram.com/HausExport"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground"
+                  aria-label="Visit our Instagram"
+                >
+                  Instagram @HausExport
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Ghost className="h-4 w-4" />
+                <a
+                  href="https://www.snapchat.com/add/HausExport"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground"
+                  aria-label="Add us on Snapchat"
+                >
+                  Snapchat @HausExport
+                </a>
               </li>
             </ul>
           </div>
