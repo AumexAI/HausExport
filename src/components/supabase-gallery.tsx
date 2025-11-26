@@ -55,10 +55,6 @@ const SupabaseGallery: React.FC<SupabaseGalleryProps> = ({ title = "Vehicles", d
 
     setImages(urls);
     setLoaded(true);
-    toast({
-      title: "Gallery updated",
-      description: `Loaded ${urls.length} image${urls.length === 1 ? "" : "s"} from ${bucket}.`,
-    });
   }, [bucket, path, onlyNames]);
 
   return (
