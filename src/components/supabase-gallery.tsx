@@ -4,6 +4,7 @@ import * as React from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { toast } from "@/hooks/use-toast";
 import { createClient } from "@supabase/supabase-js";
+import { cn } from "@/lib/utils";
 
 type SupabaseGalleryProps = {
   title?: string;
@@ -34,6 +35,10 @@ const brandTaglines: Record<string, string> = {
 };
 
 const defaultTagline = "Luxury redefined in every detail.";
+
+// Insert helper to tweak object-position per brand
+const getObjectPositionClass = (brand: string) =>
+  brand === "Range Rover" ? "object-[center_35%]" : "object-center";
 
 const SupabaseGallery: React.FC<SupabaseGalleryProps> = ({ title = "Vehicles", description, bucket, path = "", onlyNames }) => {
   const [images, setImages] = React.useState<{ name: string; url: string; brand: string; tagline: string }[]>([]);
@@ -74,7 +79,10 @@ const SupabaseGallery: React.FC<SupabaseGalleryProps> = ({ title = "Vehicles", d
                       src={img.url}
                       alt={`${img.brand} lineup`}
                       loading="lazy"
-                      className="h-[360px] w-full object-cover md:h-[420px]"
+                      className={cn(
+                        "h-[360px] w-full object-cover md:h-[420px]",
+                        getObjectPositionClass(img.brand)
+                      )}
                       onError={() =>
                         toast({
                           title: "Image failed to load",
