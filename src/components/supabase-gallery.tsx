@@ -5,7 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type SupabaseGalleryProps = {
   title?: string;
@@ -66,6 +66,7 @@ const SupabaseGallery: React.FC<SupabaseGalleryProps> = ({ title = "Vehicles", d
         description: error.message,
         variant: "destructive",
       });
+      setLoaded(true); // ensure UI shows empty state on error
       return;
     }
 
@@ -91,49 +92,88 @@ const SupabaseGallery: React.FC<SupabaseGalleryProps> = ({ title = "Vehicles", d
       <div className="mx-auto max-w-3xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight">{title}</h2>
         {description ? <p className="mt-3 text-muted-foreground">{description}</p> : null}
-        <div className="mt-4 flex justify-center">
-          <Button variant="outline" size="sm" onClick={fetchImages}>
-            Refresh photos
-          </Button>
-        </div>
       </div>
 
       <div className="relative mx-auto mt-10 max-w-4xl">
         <Carousel className="w-full">
           <CarouselContent>
-            {images.map((img, idx) => (
-              <CarouselItem key={`${img.name}-${idx}`}>
+            {!loaded ? (
+              <>
+                <CarouselItem>
+                  <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
+                    <Skeleton className="h-[360px] w-full md:h-[420px]" />
+                  </div>
+                </CarouselItem>
+                <CarouselItem>
+                  <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
+                    <Skeleton className="h-[360px] w-full md:h-[420px]" />
+                  </div>
+                </CarouselItem>
+                <CarouselItem>
+                  <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
+                    <Skeleton className="h-[360px] w-full md:h-[420px]" />
+                  </div>
+                </CarouselItem>
+              </>
+            ) : images.length === 0 ? (
+              <CarouselItem>
                 <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
-                  <div className="relative">
-                    <img
-                      src={img.url}
-                      alt={`${img.brand} lineup`}
-                      loading="lazy"
-                      className={cn(
-                        "h-[360px] w-full object-cover md:h-[420px]",
-                        getObjectPositionClass(img.brand)
-                      )}
-                      onError={() =>
-                        toast({
-                          title: "Image failed to load",
-                          description: img.name,
-                        })
-                      }
-                      onLoad={() => {
-                        if (idx === images.length - 1 && loaded) {
-                          // last image loaded
-                        }
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                      <h3 className="text-xl font-semibold">{img.brand}</h3>
-                      <p className="text-sm opacity-80">{img.tagline}</p>
+                  <div className="flex h-[240px] w-full items-center justify-center p-6 text-center md:h-[300px]">
+                    <div>
+                      <h3 className="text-lg font-semibold">No photos found</h3>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        Bucket: <span className="font-medium">{bucket}</span>
+                        {path ? (
+                          <>
+                            {" "}
+                            · Path: <span className="font-medium">{path}</span>
+                          </>
+                        ) : null}
+                      </p>
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        Ensure the bucket name matches exactly, files are in this path, and the bucket is public.
+                      </p>
                     </div>
                   </div>
                 </div>
               </CarouselItem>
-            ))}
+            ) : (
+              <>
+                {images.map((img, idx) => (
+                  <CarouselItem key={`${img.name}-${idx}`}>
+                    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
+                      <div className="relative">
+                        <img
+                          src={img.url}
+                          alt={`${img.brand} lineup`}
+                          loading="lazy"
+                          className={cn(
+                            "h-[360px] w-full object-cover md:h-[420px]",
+                            getObjectPositionClass(img.brand)
+                          )}
+                          onError={() =>
+                            toast({
+                              title: "Image failed to load",
+                              description: img.name,
+                            })
+                          }
+                          onLoad={() => {
+                            if (idx === images.length - 1 && loaded) {
+                              // last image loaded
+                            }
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                          <h3 className="text-xl font-semibold">{img.brand}</h3>
+                          <p className="text-sm opacity-80">{img.tagline}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </>
+            )}
           </CarouselContent>
           <CarouselPrevious className="-left-6" />
           <CarouselNext className="-right-6" />
