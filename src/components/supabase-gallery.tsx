@@ -3,21 +3,17 @@
 import * as React from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { toast } from "@/hooks/use-toast";
-import { createClient } from "@supabase/supabase-js";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 
 type SupabaseGalleryProps = {
   title?: string;
   description?: string;
   bucket: string;
   path?: string;
-  onlyNames: string[];
+  onlyNames?: string[];
 };
-
-const supabase = createClient(
-  "https://nqygotcdtvfokmgukpnz.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xeWdvdGNkdHZmb2ttZ3VrcG56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1NzQxMzEsImV4cCI6MjA3OTE1MDEzMX0.48PzA7eLoRz3JXvywAKWx87ubHKEHLFLhQDYfWSYMls"
-);
 
 // Insert helpers to derive brand and tagline from filename
 const getBrandFromName = (name: string) => {
@@ -40,28 +36,66 @@ const defaultTagline = "Luxury redefined in every detail.";
 const getObjectPositionClass = (brand: string) =>
   brand === "Range Rover" ? "object-[center_75%]" : "object-center";
 
-const SupabaseGallery: React.FC<SupabaseGalleryProps> = ({ title = "Vehicles", description, bucket, path = "", onlyNames }) => {
+const SupabaseGallery: React.FC<SupabaseGalleryProps> = ({ title = "Vehicles", description, bucket, path = "", onlyNames = [] }) => {
   const [images, setImages] = React.useState<{ name: string; url: string; brand: string; tagline: string }[]>([]);
   const [loaded, setLoaded] = React.useState(false);
 
-  React.useEffect(() => {
-    const prefix = path ? `${path.replace(/^\/|\/$/g, "")}/` : "";
-    const urls = onlyNames.map((name) => {
-      const { data } = supabase.storage.from(bucket).getPublicUrl(`${prefix}${name}`);
-      const brand = getBrandFromName(name);
+  const fetchImages = React.useCallback(async () => {
+    setLoaded(false);
+    const prefix = path ? path.replace(/^\/|\/$/g, "") : "";
+
+    // If a list of names is provided, fetch only those
+    if (onlyNames && onlyNames.length > 0) {
+      const urls = onlyNames.map((name) => {
+        const objectPath = prefix ? `${prefix}/${name}` : name;
+        const { data } = supabase.storage.from(bucket).getPublicUrl(objectPath);
+        const brand = getBrandFromName(name);
+        const tagline = brandTaglines[brand] ?? defaultTagline;
+        return { name, url: data.publicUrl, brand, tagline };
+      });
+      setImages(urls);
+      setLoaded(true);
+      return;
+    }
+
+    // Otherwise, list all images in the bucket/path
+    const { data, error } = await supabase.storage.from(bucket).list(prefix || "", { limit: 1000 });
+    if (error) {
+      toast({
+        title: "Could not load photos",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const files = (data ?? []).filter((file) => /\.(png|jpg|jpeg|webp|gif)$/i.test(file.name));
+    const urls = files.map((file) => {
+      const objectPath = prefix ? `${prefix}/${file.name}` : file.name;
+      const { data } = supabase.storage.from(bucket).getPublicUrl(objectPath);
+      const brand = getBrandFromName(file.name);
       const tagline = brandTaglines[brand] ?? defaultTagline;
-      return { name, url: data.publicUrl, brand, tagline };
+      return { name: file.name, url: data.publicUrl, brand, tagline };
     });
 
     setImages(urls);
     setLoaded(true);
   }, [bucket, path, onlyNames]);
 
+  React.useEffect(() => {
+    fetchImages();
+  }, [fetchImages]);
+
   return (
     <section id="vehicles" className="container mx-auto px-4 py-16">
       <div className="mx-auto max-w-3xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight">{title}</h2>
         {description ? <p className="mt-3 text-muted-foreground">{description}</p> : null}
+        <div className="mt-4 flex justify-center">
+          <Button variant="outline" size="sm" onClick={fetchImages}>
+            Refresh photos
+          </Button>
+        </div>
       </div>
 
       <div className="relative mx-auto mt-10 max-w-4xl">
