@@ -19,6 +19,11 @@ const Index = () => {
           title="Vehicles"
           description="Showcasing many of our most sought-after models."
           bucket="HausExport"
+          onlyNames={[
+            "BMW LineUP 2.png",
+            "Mercedes-Benz LineUP.png",
+            "Range Rover LineUP.png",
+          ]}
         />
 
         <Services />
