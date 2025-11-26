@@ -38,7 +38,7 @@ const defaultTagline = "Luxury redefined in every detail.";
 
 // Insert helper to tweak object-position per brand
 const getObjectPositionClass = (brand: string) =>
-  brand === "Range Rover" ? "object-[center_35%]" : "object-center";
+  brand === "Range Rover" ? "object-[center_75%]" : "object-center";
 
 const SupabaseGallery: React.FC<SupabaseGalleryProps> = ({ title = "Vehicles", description, bucket, path = "", onlyNames }) => {
   const [images, setImages] = React.useState<{ name: string; url: string; brand: string; tagline: string }[]>([]);
