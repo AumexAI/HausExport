@@ -1,43 +1,306 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Haus Export | The Art of Export</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haus Export | Luxury Vehicle Export Specialists</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <span class="logo-text">HAUS EXPORT</span>
+                    <span class="logo-subtitle">Luxury Exports</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#vehicles">Vehicles</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#process">Process</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Primary SEO -->
-    <meta name="title" content="Haus Export | The Art of Export" />
-    <meta name="application-name" content="Haus Export | The Art of Export" />
-    <meta name="description" content="We orchestrate the seamless export of premium vehicles and goods worldwide, combining precision logistics with white-glove service." />
-    <link rel="canonical" href="https://www.hausexport.com" />
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="container">
+                <h1 class="hero-title">
+                    <span class="title-line">Precision. Excellence.</span>
+                    <span class="title-line">German Engineering.</span>
+                </h1>
+                <p class="hero-subtitle">We orchestrate the seamless export of premium vehicles and goods worldwide, combining precision logistics with white-glove service</p>
+                <div class="hero-buttons">
+                    <a href="#vehicles" class="btn btn-primary">Explore Collection</a>
+                    <a href="#contact" class="btn btn-secondary">Request Consultation</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.hausexport.com" />
-    <meta property="og:site_name" content="Haus Export" />
-    <meta property="og:title" content="Haus Export | The Art of Export" />
-    <meta property="og:description" content="We orchestrate the seamless export of premium vehicles and goods worldwide, combining precision logistics with white-glove service." />
+    <!-- Brands Section -->
+    <section id="vehicles" class="brands-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Premium Brands</h2>
+                <p class="section-subtitle">Curated selection of the world's most prestigious automotive manufacturers</p>
+            </div>
+            <div class="brands-grid">
+                <div class="brand-card" data-brand="mercedes">
+                    <div class="brand-image">
+                        <img src="images/mercedes-benz.jpg" alt="Mercedes-Benz luxury SUVs" class="brand-photo">
+                    </div>
+                    <h3>Mercedes-Benz</h3>
+                    <p>German engineering excellence and timeless elegance</p>
+                </div>
+                <div class="brand-card" data-brand="bmw">
+                    <div class="brand-image">
+                        <img src="images/bmw.jpg" alt="BMW luxury SUVs" class="brand-photo">
+                    </div>
+                    <h3>BMW</h3>
+                    <p>The ultimate driving machine, precision crafted</p>
+                </div>
+                <div class="brand-card" data-brand="range-rover">
+                    <div class="brand-image">
+                        <img src="images/range-rover.jpg" alt="Range Rover luxury SUVs" class="brand-photo">
+                    </div>
+                    <h3>Range Rover</h3>
+                    <p>British luxury meets off-road capability</p>
+                </div>
+                <div class="brand-card" data-brand="lexus">
+                    <div class="brand-logo">
+                        <svg viewBox="0 0 100 100" class="brand-icon">
+                            <ellipse cx="50" cy="50" rx="40" ry="25" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M 30 50 L 50 35 L 70 50 L 50 65 Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Lexus</h3>
+                    <p>Japanese precision and refined luxury</p>
+                </div>
+                <div class="brand-card" data-brand="toyota">
+                    <div class="brand-logo">
+                        <svg viewBox="0 0 100 100" class="brand-icon">
+                            <ellipse cx="50" cy="50" rx="35" ry="20" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <ellipse cx="50" cy="50" rx="25" ry="15" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Toyota</h3>
+                    <p>Reliability and innovation in every model</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Haus Export | The Art of Export" />
-    <meta name="twitter:description" content="We orchestrate the seamless export of premium vehicles and goods worldwide, combining precision logistics with white-glove service." />
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Services</h2>
+                <p class="section-subtitle">Comprehensive export solutions tailored to your cargo and destination</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🚗</div>
+                    <h3>Vehicle Export</h3>
+                    <p>Sedans, SUVs, sports cars & classics — handled with utmost care.</p>
+                    <p class="service-tagline">White-glove handling, end-to-end tracking, and discreet delivery.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🚜</div>
+                    <h3>Heavy Machinery</h3>
+                    <p>Construction, agricultural and industrial equipment shipped globally.</p>
+                    <p class="service-tagline">White-glove handling, end-to-end tracking, and discreet delivery.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📦</div>
+                    <h3>Luxury Goods</h3>
+                    <p>Secure export for high-value items, art pieces and collectibles.</p>
+                    <p class="service-tagline">White-glove handling, end-to-end tracking, and discreet delivery.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🛡️</div>
+                    <h3>Customs & Insurance</h3>
+                    <p>Compliance, documentation, bonded logistics and full coverage.</p>
+                    <p class="service-tagline">White-glove handling, end-to-end tracking, and discreet delivery.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- JSON-LD structured data -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Haus Export",
-        "alternateName": "Haus Export | The Art of Export",
-        "url": "https://www.hausexport.com",
-        "email": "HausExport@gmail.com"
-      }
-    </script>
-  </head>
+    <!-- Process Section -->
+    <section id="process" class="process-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Process</h2>
+                <p class="section-subtitle">Precision at every step to ensure a seamless export experience</p>
+            </div>
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="process-icon">📋</div>
+                    <h3>Consult & Documentation</h3>
+                    <p>We assess requirements and prepare compliant export paperwork.</p>
+                </div>
+                <div class="process-divider"></div>
+                <div class="process-step">
+                    <div class="process-icon">📦</div>
+                    <h3>Secure Handling</h3>
+                    <p>White-glove packaging, inspection, and insured preparation.</p>
+                </div>
+                <div class="process-divider"></div>
+                <div class="process-step">
+                    <div class="process-icon">🚢</div>
+                    <h3>Freight Coordination</h3>
+                    <p>Sea and air freight tailored to timeline and budget.</p>
+                </div>
+                <div class="process-divider"></div>
+                <div class="process-step">
+                    <div class="process-icon">✈️</div>
+                    <h3>Delivery & Clearance</h3>
+                    <span class="process-badge">Seamless</span>
+                    <p>Destination customs, clearance, and final handover.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">Haus Export</h2>
+                    <p class="about-description">
+                        Founded on the principles of German precision and excellence, Haus Export represents the pinnacle of luxury vehicle export services. We combine meticulous attention to detail with unparalleled expertise in international logistics.
+                    </p>
+                    <p class="about-description">
+                        Our commitment to excellence ensures that every vehicle we export meets the highest standards of quality and presentation. We understand that our clients demand nothing less than perfection, and we deliver exactly that.
+                    </p>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Vehicles Exported</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Countries Served</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">98%</span>
+                            <span class="stat-label">Client Satisfaction</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Begin your luxury export journey with us</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <h3>Email</h3>
+                        <p><a href="mailto:HausExport@gmail.com">HausExport@gmail.com</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📷</div>
+                        <h3>Instagram</h3>
+                        <p><a href="https://instagram.com/HausExport" target="_blank" rel="noopener noreferrer">@HausExport</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">👻</div>
+                        <h3>Snapchat</h3>
+                        <p><a href="https://snapchat.com/add/HausExport" target="_blank" rel="noopener noreferrer">@HausExport</a></p>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Phone Number">
+                    </div>
+                    <div class="form-group">
+                        <select id="interest" name="interest" required>
+                            <option value="">Select Vehicle Interest</option>
+                            <option value="mercedes">Mercedes-Benz</option>
+                            <option value="bmw">BMW</option>
+                            <option value="range-rover">Range Rover</option>
+                            <option value="lexus">Lexus</option>
+                            <option value="toyota">Toyota</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>HAUS EXPORT</h3>
+                    <p>Luxury Vehicle Export Specialists</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#vehicles">Vehicles</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Export Compliance</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Haus Export. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
 </html>
