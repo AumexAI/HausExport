@@ -151,19 +151,49 @@ brandPhotos.forEach(photo => {
 // Form submission handler
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
+    contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = 'Sending...';
+        submitButton.disabled = true;
+        
         // Get form data
-        const formData = new FormData(this);
-        const data = Object.fromEntries(formData);
+        const formData = {
+            name: document.getElementById('name').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            interest: document.getElementById('interest').value,
+            message: document.getElementById('message').value.trim()
+        };
         
-        // Here you would typically send the data to a server
-        // For now, we'll just show a success message
-        alert('Thank you for your inquiry. We will contact you shortly.');
-        
-        // Reset form
-        this.reset();
+        try {
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                // Show success message
+                alert('Thank you for your inquiry. We will contact you shortly.');
+                // Reset form
+                this.reset();
+            } else {
+                throw new Error(data.error || 'Failed to send message');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Sorry, there was an error sending your message. Please try again or contact us directly at HausExport@gmail.com');
+        } finally {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+        }
     });
 }
 
