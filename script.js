@@ -153,9 +153,16 @@ const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+        e.stopPropagation();
         
         const submitButton = this.querySelector('button[type="submit"]');
+        const formMessage = document.getElementById('form-message');
         const originalText = submitButton.textContent;
+        
+        // Hide any previous messages
+        formMessage.style.display = 'none';
+        formMessage.className = 'form-message';
+        
         submitButton.textContent = 'Sending...';
         submitButton.disabled = true;
         
@@ -181,19 +188,35 @@ if (contactForm) {
             
             if (response.ok && data.success) {
                 // Show success message
-                alert('Thank you for your inquiry. We will contact you shortly.');
+                formMessage.textContent = 'Thank you for your inquiry. We will contact you shortly.';
+                formMessage.className = 'form-message form-message-success';
+                formMessage.style.display = 'block';
+                
                 // Reset form
                 this.reset();
+                
+                // Scroll to message smoothly
+                formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    formMessage.style.display = 'none';
+                }, 5000);
             } else {
                 throw new Error(data.error || 'Failed to send message');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Sorry, there was an error sending your message. Please try again or contact us directly at HausExport@gmail.com');
+            formMessage.textContent = 'Sorry, there was an error sending your message. Please try again or contact us directly at HausExport@gmail.com';
+            formMessage.className = 'form-message form-message-error';
+            formMessage.style.display = 'block';
+            formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } finally {
             submitButton.textContent = originalText;
             submitButton.disabled = false;
         }
+        
+        return false;
     });
 }
 
