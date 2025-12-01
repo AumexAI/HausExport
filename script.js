@@ -18,10 +18,23 @@ window.addEventListener('scroll', () => {
 const menuToggle = document.querySelector('.menu-toggle');
 const navMenu = document.querySelector('.nav-menu');
 
-if (menuToggle) {
-    menuToggle.addEventListener('click', () => {
+if (menuToggle && navMenu) {
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
         navMenu.classList.toggle('active');
         menuToggle.classList.toggle('active');
+        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (navMenu.classList.contains('active') && 
+            !navMenu.contains(e.target) && 
+            !menuToggle.contains(e.target)) {
+            navMenu.classList.remove('active');
+            menuToggle.classList.remove('active');
+            document.body.style.overflow = '';
+        }
     });
 }
 
@@ -83,6 +96,56 @@ brandCards.forEach(card => {
     card.addEventListener('mouseleave', function() {
         this.style.transform = 'translateY(0) scale(1)';
     });
+});
+
+// Clickable brand photos with lightbox
+const brandPhotos = document.querySelectorAll('.brand-photo');
+brandPhotos.forEach(photo => {
+    photo.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const imgSrc = this.getAttribute('src');
+        const imgAlt = this.getAttribute('alt') || 'Brand vehicle image';
+        
+        // Create lightbox overlay
+        const lightbox = document.createElement('div');
+        lightbox.className = 'lightbox-overlay';
+        lightbox.innerHTML = `
+            <div class="lightbox-content">
+                <button class="lightbox-close" aria-label="Close">&times;</button>
+                <img src="${imgSrc}" alt="${imgAlt}" class="lightbox-image">
+            </div>
+        `;
+        
+        document.body.appendChild(lightbox);
+        document.body.style.overflow = 'hidden';
+        
+        // Close lightbox
+        const closeLightbox = () => {
+            lightbox.remove();
+            document.body.style.overflow = '';
+        };
+        
+        lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+        
+        // Close on Escape key
+        const escapeHandler = (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                document.removeEventListener('keydown', escapeHandler);
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+    });
+    
+    // Add pointer cursor on mobile
+    if (window.innerWidth <= 768) {
+        photo.style.cursor = 'pointer';
+    }
 });
 
 // Form submission handler
